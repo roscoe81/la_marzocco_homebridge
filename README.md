@@ -1,4 +1,4 @@
-# lamarz_homebridge
+# la_marz_homebridge
 This project interfaces a La Marzocco Linea Mini R Coffee Machine to [Homebridge](https://github.com/homebridge/homebridge) via mqtt, so that the machine can be controlled and monitored by the Apple Home app. It provides the capability to use Siri for controlling:
 
 - Machine Power
