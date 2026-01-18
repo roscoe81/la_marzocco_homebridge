@@ -204,7 +204,7 @@ There are limitations within the Apple Home app for the two Brew By Weight setti
 
 The machine API is subject to change and could render the project non-functional.
 
-The project has only implemented a subset of the machineÕs API capabilities, to focus on the ones that benefit the most from Siri integration.
+The project has only implemented a subset of the machine's API capabilities, to focus on the ones that benefit the most from Siri integration.
 
 
 ## License
