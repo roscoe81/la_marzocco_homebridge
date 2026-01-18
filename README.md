@@ -8,8 +8,9 @@ This project interfaces a La Marzocco Linea Mini R Coffee Machine to [Homebridge
 - Brew By Weight dose and weight settings
 - Backflush Initiation
 
-<img width="202" height="320" alt="image" src="https://github.com/user-attachments/assets/4b0e25d6-08bd-4a91-b9c3-09bf9a52eb9d" />
+It also provides notifications for Boiler Ready, Steam Ready and Action Backflush status.
 
+<img width="202" height="320" alt="image" src="https://github.com/user-attachments/assets/4b0e25d6-08bd-4a91-b9c3-09bf9a52eb9d" />
 
 It's based on the [La Marzocco Python Client](https://github.com/zweckj/pylamarzocco), modified to address some Brew By Weight issues and to use local time [here]( https://github.com/roscoe81/pylamarzocco). It uses the [HomeBridge MQTT Plug In](https://github.com/cflurin/homebridge-mqtt) to provide the interface with Homebridge.
 
