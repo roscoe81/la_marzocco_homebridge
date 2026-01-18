@@ -26,7 +26,7 @@ MQTT_BROKER_IP_ADDRESS = "<Your mqtt Broker IP Address>"
 
 Configure the [HomeBridge MQTT Plug In](https://github.com/cflurin/homebridge-mqtt) using [Node-RED](https://nodered.org)
 
-Each of the Apple Home controls are set up on the Homebridge MQTT Plugin using the Node_RED with the topic ```sh Óhomebridge/to/addÓ ``` with each of the following payloads:
+Each of the Apple Home controls are set up on the Homebridge MQTT Plugin using Node_RED with the topic ```homebridge/to/add``` with each of the following payloads:
 
 ```sh
 {
