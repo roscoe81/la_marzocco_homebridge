@@ -1,4 +1,4 @@
-# lamarz_hb
+# lamarz_homebridge
 This project interfaces a La Marzocco Line Mini R Coffee Machine to [Homebridge](https://github.com/homebridge/homebridge) via mqtt, so that the machine can be controlled and monitored by the Apple Home app. It provides the capability to use Siri for controlling:
 
 - Machine Power
@@ -23,7 +23,7 @@ MQTT_BROKER_IP_ADDRESS = "<Your mqtt Broker IP Address>"
 
 Configure the [HomeBridge MQTT Plug In](https://github.com/cflurin/homebridge-mqtt) using [Node-RED](https://nodered.org)
 
-Each of the Apple Home controls are set up on the Homebridge MQTT Plugin using the Node_RED with the topic ```sh ”homebridge/to/add” ``` with each of the following payloads:
+Each of the Apple Home controls are set up on the Homebridge MQTT Plugin using the Node_RED with the topic ```sh √ìhomebridge/to/add√ì ``` with each of the following payloads:
 
 ```sh
 {
@@ -204,7 +204,7 @@ There are limitations within the Apple Home app for the two Brew By Weight setti
 
 The machine API is subject to change and could render the project non-functional.
 
-The project has only implemented a subset of the machine’s API capabilities, to focus on the ones that benefit the most from Siri integration.
+The project has only implemented a subset of the machine√ïs API capabilities, to focus on the ones that benefit the most from Siri integration.
 
 
 ## License
