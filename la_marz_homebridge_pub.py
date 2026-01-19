@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#Northcliff La Marzocco mqtt Homebridge Manager - 0.6 pub
+#Northcliff La Marzocco mqtt Homebridge Manager - 0.7 pub
 import asyncio
 import json
 import time
@@ -245,7 +245,7 @@ def update_homebridge(machine_dict: dict, tracker: StateTracker, phase): # Updat
                 print("Coffee Boiler No Water")
             elif value == "Ready":
                 temp_value = target_temp
-                print("Coffee Boiler On")
+                print("Coffee Boiler Ready")
             publish_mqtt_map(key, value)
             publish_mqtt_map("Current Coffee Temp", temp_value) # Set current brew temp to target brew temp when the boiler is ready and 80 when it's not ready
         elif key == "Coffee BBW Connected":
