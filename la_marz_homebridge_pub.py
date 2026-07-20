@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#Northcliff La Marzocco mqtt Homebridge Manager - 1.0 pub
+#Northcliff La Marzocco mqtt Homebridge Manager - 1.2 Pub
 import asyncio
 import json
 import time
@@ -14,6 +14,7 @@ from aiohttp import ClientSession
 from pylamarzocco import LaMarzoccoCloudClient, LaMarzoccoMachine
 from pylamarzocco.models import ThingDashboardWebsocketConfig
 from pylamarzocco.util import InstallationKey, generate_installation_key
+from pylamarzocco.exceptions import RequestNotSuccessful
 
 from dataclasses import dataclass, field
 from typing import Dict, Any
@@ -23,6 +24,7 @@ import copy
 logging.basicConfig(level=logging.INFO,
                     format="[%(asctime)s] %(name)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s")
 LOG = logging.getLogger(__name__)
+logging.getLogger("pylamarzocco.models._config").setLevel(logging.ERROR)
 
 @dataclass
 class StateTracker: # Records previous states to only send homebridge updates upon state changes
@@ -149,6 +151,10 @@ KEY_HANDLERS = {
     "Coffee Backflush": lambda k, v: log_and_publish(k, v, "")
 }
 
+# Set up watchdog log file
+WATCHDOG_LOG = Path("watchdog.log")
+
+KEY_RESET_COOLDOWN = 1800  # only retire the installation key if it's older than this (s) - stops key churn during a server-side outage
 
 # Homebridge mqtt topics
 hb_incoming_mqtt_topic = "homebridge/from/set" #Topic for messages from the Homebridge mqtt plugin
@@ -348,17 +354,30 @@ async def main():
             installation_key=installation_key,
             client=session,
         )
-        if registration_required:
-            print("Registering device...")
-            await client.async_register_client()
         machine = LaMarzoccoMachine(SERIAL, client)
+        try:
+            if registration_required:
+                print("Registering device...")
+                await client.async_register_client()
+            await machine.get_dashboard()
+        except RequestNotSuccessful as e:
+            # Self-heal the stale-installation-key case: on a 403 at startup, retire the existing key so the next
+            # start re-registers with a fresh one. Guarded so a genuine server/WAF 403 can't churn keys - only a
+            # pre-existing key older than the cooldown is retired.
+            if ("403" in str(e) and not registration_required and key_file.exists()
+                    and (time.time() - key_file.stat().st_mtime) > KEY_RESET_COOLDOWN):
+                backup = key_file.with_name(key_file.name + ".bak")
+                print(f"Startup auth 403 - retiring {key_file.name} to {backup.name}; next start will re-register")
+                key_file.replace(backup)
+            raise   # exit; systemd restarts (RestartSec=300) and re-registers on a clean start
         asyncio.create_task(mqtt_listener(machine))
-        await machine.get_dashboard()
+        with open(WATCHDOG_LOG, 'w') as f:
+            f.write('la_marz_homebridge script startup')
         update_homebridge(machine.to_dict(), state_tracker, "Startup Phase")
-        
         def my_callback(config: ThingDashboardWebsocketConfig):
+            with open(WATCHDOG_LOG, 'w') as f:
+                f.write('la_marz_homebridge script alive')
             update_homebridge(machine.to_dict(), state_tracker, "Machine Update")
-
         await machine.connect_dashboard_websocket(my_callback)
         
 asyncio.run(main())
