@@ -46,7 +46,7 @@ class StateTracker: # Records previous states to only send homebridge updates up
         return copy.deepcopy(self._state)
 
 # Account Data
-SERIAL = "<Your La Marzocco Machine's Serial Number"
+SERIAL = "<Your La Marzocco Machine's Serial Number>"
 USERNAME = "<Your La Marzocco Account User Name>"
 PASSWORD = "<Your La Marzocco Account Password>"
 

@@ -1,0 +1,18 @@
+# Auth artifacts — never commit these
+installation_key.json
+installation_key.json.bak
+*.bak
+
+# Your real deployed copy (with credentials filled in)
+# Keep only the sanitized *_pub.py in the repo.
+la_marz_homebridge.py
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/

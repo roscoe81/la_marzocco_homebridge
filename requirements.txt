@@ -1,0 +1,6 @@
+aiomqtt
+aiohttp
+
+# La Marzocco client — install the FORK, not the PyPI package, or the
+# local-time and websocket-reliability patches are lost:
+pylamarzocco @ git+https://github.com/roscoe81/pylamarzocco
