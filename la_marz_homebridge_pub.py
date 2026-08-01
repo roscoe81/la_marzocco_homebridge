@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#Northcliff La Marzocco mqtt Homebridge Manager - 1.2 Pub
+#Northcliff La Marzocco mqtt Homebridge Manager - 1.3 Pub
 import asyncio
 import json
 import time
@@ -299,11 +299,19 @@ async def main():
             installation_key = InstallationKey.from_json(f.read())
                         
     async def mqtt_listener(machine: LaMarzoccoMachine): # Homebridge mqtt listener
-        async with aiomqtt.Client(MQTT_BROKER_IP_ADDRESS) as client:
-            await client.subscribe(hb_incoming_mqtt_topic)
-            async for message in client.messages:
-                parsed_json = json.loads(message.payload.decode())
-                await handle_homebridge_command(machine, parsed_json)
+        while True:
+            try:
+                async with aiomqtt.Client(MQTT_BROKER_IP_ADDRESS) as client:
+                    await client.subscribe(hb_incoming_mqtt_topic)
+                    async for message in client.messages:
+                        try:
+                            parsed_json = json.loads(message.payload.decode())
+                            await handle_homebridge_command(machine, parsed_json)
+                        except Exception:
+                            LOG.exception("Homebridge command handler failed")
+            except Exception:
+                LOG.exception("MQTT listener connection lost, retrying in 5s")
+                await asyncio.sleep(5)
                     
     async def handle_homebridge_command(machine, parsed_json): # Process incoming Homebridge mqtt messages
         if parsed_json["name"] == "Coffee Power":
